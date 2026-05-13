@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "Proteína Whey Gold Standard 1kg",
+    "description": "Proteína aislada de suero de leche sabor chocolate",
+    "code": "WHEY-CHOC-01",
+    "price": 25000,
+    "stock": 50,
+    "category": "Suplementos",
+    "status": true
+  }
+]
