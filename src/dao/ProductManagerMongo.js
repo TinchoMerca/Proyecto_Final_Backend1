@@ -4,8 +4,11 @@ const Product = require('../models/product.model'); // Importamos el modelo estr
 class ProductManagerMongo {
     
     // Obtener todos los productos 
-    async getProducts() {
-        return await Product.find().lean();
+    async getProducts(filter = {}, options = {}) {
+        // filter: las condiciones de búsqueda (ej: category: "Suplementos")
+        // options: página, límite, ordenamiento, etc.
+        const result = await Product.paginate(filter, options);
+        return result;
     }
 
     // Obtener un producto por ID
