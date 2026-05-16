@@ -40,4 +40,51 @@ router.post('/:cid/products/:pid', async (req, res) => {
     }
 });
 
+// Eliminar un producto del carrito
+router.delete('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const updatedCart = await cartManager.deleteProductFromCart(cid, pid);
+        res.json({ status: "success", message: "Producto eliminado del carrito", payload: updatedCart });
+    } catch (error) {
+        res.status(404).json({ status: "error", message: error.message });
+    }
+});
+
+// Actualizar carrito completo
+router.put('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const productsArray = req.body.products;
+        const updatedCart = await cartManager.updateCart(cid, productsArray);
+        res.json({ status: "success", message: "Carrito actualizado", payload: updatedCart });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
+// Actualizar cantidad de un producto
+router.put('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const { quantity } = req.body; 
+        
+        const updatedCart = await cartManager.updateProductQuantity(cid, pid, quantity);
+        res.json({ status: "success", message: "Cantidad actualizada", payload: updatedCart });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
+// Vaciar el carrito 
+router.delete('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const clearedCart = await cartManager.clearCart(cid);
+        res.json({ status: "success", message: "Carrito vaciado", payload: clearedCart });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
 module.exports = router;
