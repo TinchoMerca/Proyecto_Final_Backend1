@@ -1,11 +1,19 @@
+
 const express = require('express');
 const mongoose = require('mongoose')
+const exphbs = require('express-handlebars')
+
+const productsRouter = require('./routes/products.router');
+const cartsRouter = require('./routes/carts.router');
+const viewsRouter  = require('./routes/views.router')
+
 const app = express();
 const PORT = 8080;
 
-// Importamos nuestros routers
-const productsRouter = require('./routes/products.router');
-const cartsRouter = require('./routes/carts.router');
+//Handlebars
+app.engine('hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views'); 
 
 // Middlewares base
 app.use(express.json());
@@ -14,6 +22,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/', viewsRouter)
 
 // Ruta de prueba (Health check)
 app.get('/ping', (req, res) => {
