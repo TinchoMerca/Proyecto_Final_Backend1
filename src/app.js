@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose')
 const app = express();
 const PORT = 8080;
 
@@ -18,6 +19,10 @@ app.use('/api/carts', cartsRouter)
 app.get('/ping', (req, res) => {
     res.send('¡Servidor de MuscleStore funcionando!');
 });
+
+mongoose.connect('mongodb://127.0.0.1:27017/ecommerce')
+    .then(() => console.log('Conectado a la base de datos MongoDB'))
+    .catch((error) => console.error('Error al conectar a MongoDB:', error));
 
 // Inicialización del servidor
 app.listen(PORT, () => {

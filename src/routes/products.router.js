@@ -1,9 +1,10 @@
 
 const { Router } = require('express');
-const ProductManager = require('../dao/ProductManager');
 const router = Router();
-
-const productManager = new ProductManager('productos.json');
+/* const ProductManager = require('../dao/ProductManager');
+const productManager = new ProductManager('productos.json'); */
+const ProductManagerMongo = require('../dao/ProductManagerMongo');
+const productManager = new ProductManagerMongo();
 
 // Endpoint GET: Obtener todos los productos
 router.get('/', async (req, res) => {
@@ -37,7 +38,7 @@ router.post('/', async (req, res) => {
 // Endpoint GET: Obtener un producto específico por ID 
 router.get('/:pid', async (req, res) => {
     try {
-        const pId = parseInt(req.params.pid); 
+        const pId = req.params.pid; 
         const product = await productManager.getProductById(pId);
         res.json({ status: "success", payload: product });
 
@@ -49,7 +50,7 @@ router.get('/:pid', async (req, res) => {
 // Endpoint PUT: Actualizar un producto 
 router.put('/:pid', async (req, res) => {
     try {
-        const pId = parseInt(req.params.pid);
+        const pId = req.params.pid;
         const productInfo = req.body; 
         
         const updatedProduct = await productManager.updateProduct(pId, productInfo);
@@ -62,7 +63,7 @@ router.put('/:pid', async (req, res) => {
 // Endpoint DELETE: Eliminar un producto 
 router.delete('/:pid', async (req, res) => {
     try {
-        const pId = parseInt(req.params.pid);
+        const pId = req.params.pid;
         await productManager.deleteProduct(pId);
         res.json({ status: "success", message: "Producto eliminado correctamente de MuscleStore" });
     } catch (error) {

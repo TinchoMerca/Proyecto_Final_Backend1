@@ -1,11 +1,11 @@
 
 const { Router } = require('express');
-const CartManager = require('../dao/CartManager');
+const CartManagerMongo = require('../dao/CartManagerMongo');
 
 const router = Router();
-const cartManager = new CartManager('carritos.json');
+const cartManager = new CartManagerMongo();
 
-// Endpoint POST: Crear un carrito nuevo (/api/carts)
+// Crear un carrito nuevo
 router.post('/', async (req, res) => {
     try {
         const newCart = await cartManager.createCart();
@@ -15,10 +15,10 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Endpoint GET: Listar productos de un carrito específico (/api/carts/:cid)
+// Listar productos de un carrito
 router.get('/:cid', async (req, res) => {
     try {
-        const cId = parseInt(req.params.cid);
+        const cId = req.params.cid;
         const cart = await cartManager.getCartById(cId);
         
         res.json({ status: "success", payload: cart.products });
@@ -27,11 +27,11 @@ router.get('/:cid', async (req, res) => {
     }
 });
 
-// Endpoint POST: Agregar un producto a un carrito (/api/carts/:cid/products/:pid)
+// Agregar producto al carrito
 router.post('/:cid/products/:pid', async (req, res) => {
     try {
-        const cId = parseInt(req.params.cid);
-        const pId = parseInt(req.params.pid);
+        const cId = req.params.cid;
+        const pId = req.params.pid; 
         
         const updatedCart = await cartManager.addProductToCart(cId, pId);
         res.json({ status: "success", payload: updatedCart });
