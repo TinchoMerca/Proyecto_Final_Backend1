@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MuscleStore - Suplementos Premium</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Establecemos la conexión desde el navegador hacia el servidor
+        const socket = io();
+    </script>
     <style>
         body {
             margin: 0;
@@ -40,10 +45,6 @@
     <div class="container">
         {{{body}}} 
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        // Establecemos la conexión desde el navegador hacia el servidor
-        const socket = io();
-    </script>
+    
 </body>
 </html>

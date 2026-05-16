@@ -23,13 +23,13 @@ router.get('/', async (req, res) => {
         const options = {
             page: parseInt(page),
             limit: parseInt(limit),
-            lean: true 
+            lean: true
         };
 
         if (sort === 'asc') {
-            options.sort = { price: 1 }; 
+            options.sort = { price: 1 };
         } else if (sort === 'desc') {
-            options.sort = { price: -1 }; 
+            options.sort = { price: -1 };
         }
 
         const result = await productManager.getProducts(filter, options);
@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
 
         res.json({
             status: "success",
-            payload: result.docs,        
+            payload: result.docs,
             totalPages: result.totalPages,
             prevPage: result.prevPage,
             nextPage: result.nextPage,
@@ -68,10 +68,14 @@ router.post('/', async (req, res) => {
         const productInfo = req.body;
 
         if (!productInfo.title || !productInfo.price || !productInfo.code) {
-            return res.status(400).json({ status: "error", message: "Faltan campos obligatorios (title, price, code)" });
+            return res.status(400).json({ status: "error", message: "Faltan campos obligatorios" });
         }
 
         const newProduct = await productManager.addProduct(productInfo);
+
+        const io = req.app.get('io');
+        console.log("Emitiendo evento productoAgregado...")
+        io.emit('productoAgregado', newProduct);
 
         res.status(201).json({ status: "success", payload: newProduct });
     } catch (error) {
