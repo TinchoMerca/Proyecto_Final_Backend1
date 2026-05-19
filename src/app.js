@@ -1,4 +1,5 @@
 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
@@ -9,7 +10,7 @@ const cartsRouter = require('./routes/carts.router');
 const viewsRouter  = require('./routes/views.router')
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080
 
 //Handlebars
 app.engine('hbs', exphbs.engine({ extname: '.hbs' }));
@@ -25,7 +26,7 @@ app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/', viewsRouter)
 
-mongoose.connect('mongodb://127.0.0.1:27017/ecommerce')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Conectado a la base de datos MongoDB'))
     .catch((error) => console.error('Error al conectar a MongoDB:', error));
 

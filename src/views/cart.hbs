@@ -1,0 +1,130 @@
+<div style="max-width: 800px; margin: 0 auto; margin-bottom: 6rem;">
+    <h2 style="color: #f59e0b; border-bottom: 2px solid #2d313a; padding-bottom: 0.5rem; margin-bottom: 2rem;">
+        {{titulo}}
+    </h2>
+
+    {{#if carrito.products.length}}
+    <div style="background-color: #1a1d24; border: 1px solid #2d313a; border-radius: 8px; padding: 1.5rem;">
+
+        {{#each carrito.products}}
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d313a; padding: 1rem 0;">
+
+            <div style="flex: 2;">
+                <h3 style="margin: 0 0 0.5rem 0; color: #fff;">{{this.product.title}}</h3>
+                <span style="color: #9ca3af; font-size: 0.9rem;">Precio unitario: ${{this.product.price}}</span>
+            </div>
+
+            <div style="display: flex; gap: 1.5rem; align-items: center; flex: 3; justify-content: flex-end;">
+
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <label style="color: #9ca3af; font-size: 0.85rem;">Cant:</label>
+                    <input type="number" value="{{this.quantity}}" min="1"
+                        onchange="cambiarCantidad('{{../carrito._id}}', '{{this.product._id}}', this.value)"
+                        style="width: 60px; padding: 0.3rem; background-color: #2d313a; border: 1px solid #4b5563; color: white; border-radius: 4px; text-align: center;">
+                </div>
+
+                <span style="color: #10b981; font-weight: bold; font-size: 1.2rem; min-width: 80px; text-align: right;">
+                    ${{this.product.price}}
+                </span>
+
+                <button onclick="eliminarProducto('{{../carrito._id}}', '{{this.product._id}}')"
+                    style="background-color: #ef4444; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer; transition: 0.2s;"
+                    title="Eliminar producto">
+                    🗑️
+                </button>
+            </div>
+        </div>
+        {{/each}}
+
+    </div>
+
+    <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <a href="/products" style="color: #f59e0b; text-decoration: none; font-weight: bold;">← Seguir comprando</a>
+        <div style="display: flex; gap: 1rem;">
+            <button onclick="vaciarCarrito('{{carrito._id}}')"
+                style="background-color: #2d313a; color: #ef4444; border: 1px solid #ef4444; padding: 1rem 1.5rem; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.2s;">
+                Vaciar Carrito
+            </button>
+            <button
+                style="background-color: #10b981; color: #0f1115; border: none; padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.2s;">
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+
+    {{else}}
+    <div
+        style="text-align: center; padding: 4rem 2rem; background-color: #1a1d24; border-radius: 8px; border: 1px solid #2d313a;">
+        <span style="font-size: 3rem;">🛒</span>
+        <h3 style="color: #e5e7eb; margin-top: 1rem;">Tu carrito está vacío</h3>
+        <p style="color: #9ca3af; margin-bottom: 2rem;">¡Agregá algunos suplementos para empezar!</p>
+        <a href="/products"
+            style="background-color: #f59e0b; color: #0f1115; padding: 0.8rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold;">
+            Ir a la tienda
+        </a>
+    </div>
+    {{/if}}
+</div>
+
+<script>
+    // Función para actualizar la cantidad
+    async function cambiarCantidad(cartId, productId, nuevaCantidad) {
+        try {
+            const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: parseInt(nuevaCantidad) })
+            });
+
+            if (response.ok) {
+                // Recargamos la página para ver los cambios impactados
+                window.location.reload();
+            } else {
+                alert("Error al actualizar la cantidad.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Función para eliminar un producto específico
+    async function eliminarProducto(cartId, productId) {
+        if (confirm("¿Seguro que querés quitar este producto del carrito?")) {
+            try {
+                const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Error al eliminar el producto.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    // Función para vaciar todo el carrito de golpe
+    async function vaciarCarrito(cartId) {
+        if (confirm("¿Estás seguro de que querés vaciar todo el carrito?")) {
+            try {
+                const response = await fetch(`/api/carts/${cartId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Error al vaciar el carrito.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+</script>

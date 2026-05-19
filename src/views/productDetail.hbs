@@ -1,0 +1,46 @@
+<div
+    style="max-width: 800px; margin: 0 auto; background-color: #1a1d24; border: 1px solid #2d313a; border-radius: 8px; padding: 2rem; display: flex; gap: 2rem; align-items: center;">
+
+    <div style="flex: 1;">
+        <span
+            style="font-size: 0.9rem; background-color: #2d313a; color: #f59e0b; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: bold;">
+            {{producto.category}}
+        </span>
+        <h2 style="color: #fff; font-size: 2rem; margin: 1rem 0;">{{producto.title}}</h2>
+        <p style="color: #9ca3af; line-height: 1.6; margin-bottom: 2rem;">
+            {{producto.description}}
+        </p>
+
+        <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+            <span style="font-size: 2rem; font-weight: bold; color: #10b981;">${{producto.price}}</span>
+            <span style="color: #9ca3af;">Stock disponible: {{producto.stock}}</span>
+        </div>
+
+        <button onclick="agregarAlCarrito('{{producto._id}}')"
+            style="background-color: #f59e0b; color: #0f1115; border: none; padding: 1rem 2rem; font-size: 1.1rem; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: 0.2s;">
+            🛒 Agregar al Carrito
+        </button>
+    </div>
+</div>
+
+<script>
+    // Como no tenemos un sistema de login todavía, vamos a usar un ID de carrito "fijo"
+    // IMPORTANTE: Reemplazá este ID por el ID de un carrito real que tengas en tu base de datos MongoDB
+    const CART_ID = "6a08ab020f14128bfa76e408";
+
+    async function agregarAlCarrito(productId) {
+        try {
+            const response = await fetch(`/api/carts/${CART_ID}/products/${productId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert("¡Suplemento agregado al carrito con éxito!");
+            } else {
+                alert("Hubo un problema al agregar el producto.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+</script>

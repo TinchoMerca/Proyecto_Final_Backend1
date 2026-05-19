@@ -2,12 +2,16 @@
     {{titulo}}
 </h2>
 
-<div id="productos-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
-    
+
+
+<div id="productos-grid"
+    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 6rem;">
     {{#each productos}}
-    <div style="background-color: #1a1d24; border: 1px solid #2d313a; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+    <div
+        style="background-color: #1a1d24; border: 1px solid #2d313a; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
         <div>
-            <span style="font-size: 0.8rem; background-color: #2d313a; color: #f59e0b; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold;">
+            <span
+                style="font-size: 0.8rem; background-color: #2d313a; color: #f59e0b; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold;">
                 {{this.category}}
             </span>
             <h3 style="margin: 1rem 0 0.5rem 0; color: #fff;">{{this.title}}</h3>
@@ -15,29 +19,57 @@
                 {{this.description}}
             </p>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #2d313a; padding-top: 1rem; margin-top: auto;">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #2d313a; padding-top: 1rem; margin-top: auto;">
             <span style="font-size: 1.4rem; font-weight: bold; color: #10b981;">
                 ${{this.price}}
             </span>
             <span style="font-size: 0.85rem; color: #9ca3af;">
                 Stock: {{this.stock}}
             </span>
+            <a href="/products/{{this._id}}"
+                style="display: block; text-align: center; background-color: #f59e0b; color: #0f1115; padding: 0.5rem; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 1rem;">
+                Ver Detalle
+            </a>
         </div>
     </div>
     {{/each}}
+
+    <div
+        style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1a1d24; padding: 1.5rem 0; border-top: 1px solid #2d313a; display: flex; justify-content: center; align-items: center; gap: 1.5rem; z-index: 100;">
+
+        {{#if hasPrevPage}}
+        <a href="/products?page={{prevPage}}"
+            style="padding: 0.6rem 1.2rem; background-color: #2d313a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.2s;">
+            ⬅️ Anterior
+        </a>
+        {{/if}}
+
+        <span
+            style="padding: 0.6rem 1.5rem; background-color: #0f1115; color: #f59e0b; font-weight: bold; border-radius: 6px; border: 1px solid #2d313a;">
+            Página {{page}}
+        </span>
+
+        {{#if hasNextPage}}
+        <a href="/products?page={{nextPage}}"
+            style="padding: 0.6rem 1.2rem; background-color: #2d313a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.2s;">
+            Siguiente ➡️
+        </a>
+        {{/if}}
+
+    </div>
 
 </div>
 
 <script>
     socket.on('productoAgregado', (producto) => {
-        console.log("¡El producto llegó al navegador!", producto);
         
         const grid = document.getElementById('productos-grid');
-        
+
         const nuevaTarjeta = document.createElement('div');
-        
+
         nuevaTarjeta.style.cssText = "background-color: #1a1d24; border: 1px solid #2d313a; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;";
-        
+
         nuevaTarjeta.innerHTML = `
             <div>
                 <span style="font-size: 0.8rem; background-color: #2d313a; color: #f59e0b; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold;">
@@ -55,9 +87,11 @@
                 <span style="font-size: 0.85rem; color: #9ca3af;">
                     Stock: ${producto.stock}
                 </span>
+                
             </div>
+            
         `;
-        
+
         grid.appendChild(nuevaTarjeta);
     });
 </script>

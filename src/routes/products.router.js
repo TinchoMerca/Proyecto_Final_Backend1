@@ -74,9 +74,7 @@ router.post('/', async (req, res) => {
         const newProduct = await productManager.addProduct(productInfo);
 
         const io = req.app.get('io');
-        console.log("Emitiendo evento productoAgregado...")
         io.emit('productoAgregado', newProduct);
-
         res.status(201).json({ status: "success", payload: newProduct });
     } catch (error) {
         res.status(500).json({ status: "error", message: "Error al guardar el producto" });
